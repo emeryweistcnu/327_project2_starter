@@ -99,34 +99,43 @@ bool openFile(std::fstream& myfile, const std::string& myFileName,
 }
 
 void closeFile(std::fstream& myfile) {
-	myfile.close();
+	if(myfile.is_open()) myfile.close();
 }
 
 int writeArraytoFile(const std::string &outputfilename) {
-	return 0;
+	std::ofstream outfile;
+	outfile.open(outputfilename);
+
+	if (!outfile.is_open()) return constants::FAIL_FILE_DID_NOT_OPEN;
+	if (next == 0) return constants::FAIL_NO_ARRAY_DATA;
+
+	for (int i = 0; i < next; i++) {
+		outfile << words[i].word << " " << words[i].occurrences << std::endl;
+	}
+
+	outfile.close();
+	return constants::SUCCESS;
 }
 
 void sortArray(constants::sortOrder so) {
 	bool sorted = false;
-	std::ofstream outfile("../output/testdata_full");
 
 	switch (so) {
 	case constants::sortOrder::ASCENDING:
 		while (!sorted) {
 			sorted = true;
 
-			for (int i = 0; i < next - 1; i++) {
-				if (toupper(words[i].word[0]) < toupper(words[i + 1].word[0])) {
+			for (int i = 0; i < next; i++) {
+				char w1 = toupper(words[i].word[0]);
+				char w2 = toupper(words[i + 1].word[0]);
+
+				if (w1 < w2) {
 					word w = words[i + 1];
 					words[i + 1] = words[i];
 					words[i] = w;
 					sorted = false;
 				}
 			}
-		}
-
-		for (int i = 0; i < next; i++) {
-			outfile << words[i].word + "\n" << std::endl;
 		}
 		break;
 	case constants::sortOrder::DESCENDING:
@@ -169,6 +178,4 @@ void sortArray(constants::sortOrder so) {
 	default:
 		break;
 	}
-
-	outfile.close();
 }
