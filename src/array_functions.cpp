@@ -111,6 +111,7 @@ int writeArraytoFile(const std::string &outputfilename) {
 
 	for (int i = 0; i < next; i++) {
 		outfile << words[i].word << " " << words[i].occurrences << std::endl;
+		std::cout << words[i].word << " " << words[i].occurrences << std::endl;
 	}
 
 	outfile.close();
@@ -125,11 +126,12 @@ void sortArray(constants::sortOrder so) {
 		while (!sorted) {
 			sorted = true;
 
-			for (int i = 0; i < next; i++) {
-				char w1 = toupper(words[i].word[0]);
-				char w2 = toupper(words[i + 1].word[0]);
-
-				if (w1 < w2) {
+			for (int i = 0; i < next - 1; i++) {
+				std::string w1 = words[i].word;
+				std::string w2 = words[i + 1].word;
+				toUpper(w1);
+				toUpper(w2);
+				if (w1 > w2) {
 					word w = words[i + 1];
 					words[i + 1] = words[i];
 					words[i] = w;
